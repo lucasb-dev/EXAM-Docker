@@ -1,0 +1,42 @@
+services:
+  # --- LE CACHE (Redis) ---
+  cache:
+    image: redis:7-alpine
+    # Contrainte respectée : Aucun port n'est exposé vers l'extérieur
+    volumes:
+      - redis-data:/data
+    networks:
+      - taskflow-net
+
+  # --- LE BACKEND (API Node.js) ---
+  backend:
+    build: ./backend
+    ports:
+      - "3001:3001"
+    environment:
+      # Injection des variables d'environnement (avec fallback par défaut)
+      REDIS_HOST: ${REDIS_HOST:-cache}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      PORT: ${BACKEND_PORT:-3001}
+    depends_on:
+      - cache
+    networks:
+      - taskflow-net
+
+  # --- LE FRONTEND (Interface Web Nginx) ---
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - taskflow-net
+
+# Déclaration du volume nommé pour persister les données de Redis
+volumes:
+  redis-data:
+
+# Déclaration d'un réseau interne pour que les conteneurs communiquent entre eux
+networks:
+  taskflow-net:
