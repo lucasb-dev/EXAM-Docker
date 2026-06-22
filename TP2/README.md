@@ -1,6 +1,3 @@
-Voici le contenu détaillé à coller dans ton fichier `TP2/README.md` :
-
-```markdown
 # TP2 - Architecture Multi-services avec Docker Compose
 
 Ce projet met en œuvre `docker-compose` pour orchestrer une architecture microservices complète. Il démontre la gestion des réseaux inter-conteneurs et la persistance des données via les volumes Docker.
