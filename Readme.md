@@ -1,6 +1,3 @@
-Voici le fichier `README.md` complet, mis à jour et structuré sans fioritures pour intégrer parfaitement le TP2 et le TP3 avec une navigation claire entre les dossiers.
-
-```markdown
 # Travaux Pratiques Docker - Infrastructure et DevOps
 
 Ce dépôt centralise les différents travaux pratiques réalisés autour de la conteneurisation, de l'orchestration de services et de la gestion des réseaux isolés avec Docker et Docker Compose.
