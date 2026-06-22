@@ -1,28 +1,25 @@
-FROM node:18
+# 1. image de base ultra-légère (Alpine Linux) au lieu de Debian full
+FROM node:18-alpine
 
 WORKDIR /app
 
-# Clé API en dur dans l'image
-ENV API_KEY=sk-prod-abc123xyz456
-ENV DB_PASSWORD=supersecret123
-ENV DB_HOST=prod-db.monapp.com
+# 2. copie des fichiers de dépendances uniquement pour optimiser le cache
+COPY package*.json ./
 
-# On copie tout le projet d'un coup
-COPY . .
-
-# On installe les dépendances APRÈS avoir copié le code
-# (le cache npm sera invalidé à chaque modification de code)
+# Installation des dépendances
 RUN npm install
 
+# 3. copie du reste du code source après l'installation des paquets
+COPY . .
+
+# build de l'application
 RUN npm run build
 
-RUN apt-get update && apt-get install -y \
-    curl \
-    wget \
-    vim \
-    git \
-    htop \
-    net-tools
+# On donne les droits d'écriture à l'utilisateur 'node'
+RUN chown -R node:node /app
+
+# 4. sécurité : Passage à un utilisateur non-root standard intégré à l'image Node
+USER node
 
 EXPOSE 3000
 
