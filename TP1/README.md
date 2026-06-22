@@ -1,6 +1,3 @@
-Voici le contenu détaillé à coller dans ton fichier `TP1/README.md` :
-
-```markdown
 # TP1 - Introduction à la Conteneurisation
 
 Ce premier projet illustre les principes fondamentaux de Docker. L'objectif est de déployer une application basique isolée dans un conteneur et de configurer l'accès réseau entre la machine hôte et le conteneur.
