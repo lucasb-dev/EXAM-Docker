@@ -1,0 +1,49 @@
+services:
+  # --- LE BACKEND (API Node.js) ---
+  api:
+    build: ./api
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_NAME: tp2db
+      DB_USER: tp2user
+      DB_PASSWORD: ${DB_PASSWORD}  # Récupéré depuis le .env
+      PORT: 3000
+    depends_on:
+      - database
+    restart: on-failure
+
+  # --- LA BASE DE DONNÉES (PostgreSQL) ---
+  database:
+    image: postgres:15-alpine
+    # Pas de 'ports:' ici, la BDD reste invisible depuis l'hôte
+    environment:
+      POSTGRES_DB: tp2db
+      POSTGRES_USER: tp2user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  # --- LE FRONTEND (Nginx/HTML) ---
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80" # Nginx écoute sur le port 80 par défaut à l'intérieur
+    depends_on:
+      - api
+
+  # --- L'INTERFACE D'ADMINISTRATION (Adminer) ---
+  adminer:
+    image: adminer
+    ports:
+      - "8081:8080" # Adminer expose le port 8080 par défaut dans son conteneur
+    environment:
+      ADMINER_DEFAULT_SERVER: database
+    depends_on:
+      - database
+
+# Déclaration du volume nommé pour la persistance des données
+volumes:
+  db-data:
